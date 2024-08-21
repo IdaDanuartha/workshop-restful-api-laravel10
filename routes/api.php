@@ -28,11 +28,23 @@ Route::prefix("v1")->group(function() {
         Route::post("/register", "register");
     });
 
-    // Menggunakan apiResource untuk CRUD posts
-    Route::apiResource("posts", PostController::class);
-    // Route untuk mengupload gambar pada post
-    Route::post("posts/{post}/upload-image", [PostController::class, 'uploadImage']);
-
-    // Menggunakan apiResource untuk CRUD tags
-    Route::apiResource("tags", TagController::class);
+    // Route untuk modul post (index, show)
+    // Menggunakan apiResource untuk CRUD kecuali operasi store, update, dan delete
+    Route::apiResource("posts", PostController::class)->except("store", "update", "delete");
+    
+    // Route untuk modul tag (index, show)
+    // Menggunakan apiResource untuk CRUD kecuali operasi store, update, dan delete
+    Route::apiResource("tags", TagController::class)->except("store", "update", "delete");
+    
+    // Mengelompokkan Routes yang memerlukan autentikasi menggunakan middleware auth:sanctum
+    Route::middleware(["auth:sanctum"])->group(function() {
+        // Route untuk modul post (create, update, delete)
+        // Menggunakan apiResource untuk CRUD kecuali operasi index dan show
+        Route::apiResource("posts", PostController::class)->except("index", "show");
+        // Route untuk mengupload gambar pada post
+        Route::post("posts/{post}/upload-image", [PostController::class, 'uploadImage']);
+        // Route untuk modul tag (create, update, delete)
+        // Menggunakan apiResource untuk CRUD kecuali operasi index dan show
+        Route::middleware(['admin'])->apiResource("tags", TagController::class)->except("index", "show");
+    });
 });
