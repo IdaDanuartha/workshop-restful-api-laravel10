@@ -19,7 +19,7 @@ class ApiResponse
     // Metode untuk logging pengecualian dan melempar pengecualian HTTP dengan pesan yang diberikan
     public static function throw($e, $message = "Proses gagal dilakukan, sepertinya ada yang salah!")
     {
-        // Mencatat log pengecualian
+        // Mencatat log
         logger($e);
         // Melempar HttpResponseException dengan pesan JSON dan status kode 500 (Internal Server Error)
         throw new HttpResponseException(response()->json(["message" => $message], 500));
@@ -30,7 +30,7 @@ class ApiResponse
     {
         // Membuat array respons dengan kode status, message (jika ada), dan data hasil
         $response = [
-            'code' => $code,
+            'success' => $code < 400,
             'message' => null,
             'data' => $result
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Post;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -40,10 +41,6 @@ class UploadImageRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         // Melempar HttpResponseException dengan respons JSON yang berisi pesan error dan detail kesalahan validasi
-        throw new HttpResponseException(response()->json([
-            'success' => false, // Menandakan bahwa request tidak berhasil
-            'message' => 'Validation errors', // Pesan umum untuk kesalahan validasi
-            'data' => $validator->errors() // Detail kesalahan validasi
-        ]));
+        throw new HttpResponseException(ApiResponse::sendResponse($validator->errors(), "Validation errors", 400));
     }
 }
