@@ -58,6 +58,8 @@ class PostRepository implements PostRepositoryInterface
       $get_post = $this->getById($id);
       // Menghapus post berdasarkan ID
       $is_deleted = Post::destroy($id);
+      // Menghapus semua tag dari post
+      $get_post->tags()->detach();
       // Mengembalikan post yang dihapus jika berhasil, atau null jika gagal
       return $is_deleted ? $get_post : null;
    }

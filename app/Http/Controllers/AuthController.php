@@ -31,12 +31,14 @@ class AuthController extends Controller
                 // Mengembalikan respons API jika login berhasil
                 return ApiResponse::sendResponse(new AuthResource([
                     "user" => $user,
-                    "token" => $token,
-                    "token_type" => "Bearer",
+                    "access_token" => [
+                        "token" => $token,
+                        "token_type" => "Bearer",
+                    ]
                 ]),'Login berhasil', 200);
             } else {
                 // Mengembalikan respons API jika email atau password salah
-                return ApiResponse::sendResponse(null,"Email atau password salah", 400);
+                return ApiResponse::sendResponse(null, "Email atau password salah", 400);
             }
         } catch(\Exception $ex){
             // Mengembalikan respons rollback jika terjadi kesalahan
